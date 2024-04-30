@@ -1,0 +1,46 @@
+import { LineEdit } from "std-widgets.slint";
+import "./FiraCodeNerdFontMono-Regular.ttf";
+
+export component AppWindow inherits Window {
+    // = = configuration = = //
+
+    // window
+    in property <int> window_width: 256;
+    in property <int> window_height: 32;
+
+    // font
+    in property <int> font_size: 18;
+    in property <string> default_font: "FiraCode Nerd Font Mono";
+
+    // colors
+    in property <color> text_color: #f8f8f2ff;
+    in property <color> background_color: #35313bee;
+
+    // appy
+    no-frame: true;
+    always-on-top: true;
+    preferred-width: window_width * 1px;
+    preferred-height: window_height * 1px;
+
+    default-font-family: default_font;
+    default-font-size: font_size * 1px;
+
+    // = = = = = = = = = = = //
+
+    // Focus by default
+    forward-focus: input;
+
+    // Inform rust about inputs
+    callback new_input(string);
+
+    // The actual input widget
+    input := LineEdit {
+        width: parent.width;
+        height: parent.height;
+        placeholder-text: "type a command...";
+        accepted => {
+            root.new_input(input.text);
+            input.text = "";
+        }
+    }
+}

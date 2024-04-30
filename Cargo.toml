@@ -1,0 +1,19 @@
+[package]
+name = "blink"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[dependencies]
+clap = { version = "4.5.4", features = ["derive"] }
+slint = { version = "1.5", default-features = false, features = [
+    "std",
+    "compat-1-2",
+    "backend-winit",
+    "renderer-winit-software",
+] }
+winit = "0.29.15"
+i-slint-backend-winit = "1.5.1"
+
+[build-dependencies]
+slint-build = "1.5"
