@@ -1,4 +1,4 @@
-import { LineEdit } from "std-widgets.slint";
+import { LineEdit, TextEdit } from "std-widgets.slint";
 import "./FiraCodeNerdFontMono-Regular.ttf";
 
 export component AppWindow inherits Window {
@@ -13,8 +13,8 @@ export component AppWindow inherits Window {
     in property <string> default_font: "FiraCode Nerd Font Mono";
 
     // colors
-    in property <color> text_color: #f8f8f2ff;
-    in property <color> background_color: #35313bee;
+    in property <color> tx_color: #f8f8f2ff;
+    in property <color> bg_color: #35313bee;
 
     // appy
     no-frame: true;
@@ -25,6 +25,7 @@ export component AppWindow inherits Window {
     default-font-family: default_font;
     default-font-size: font_size * 1px;
 
+    background: bg_color;
     // = = = = = = = = = = = //
 
     // Focus by default
@@ -38,6 +39,7 @@ export component AppWindow inherits Window {
         width: parent.width;
         height: parent.height;
         placeholder-text: "type a command...";
+
         accepted => {
             root.new_input(input.text);
             input.text = "";

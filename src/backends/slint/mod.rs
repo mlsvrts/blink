@@ -5,25 +5,52 @@ mod winit_helper;
 
 slint::include_modules!();
 
-pub fn render(config: &crate::config::Config, logic: impl Fn(String) + 'static) -> Result<(), Box<dyn std::error::Error>> {
+pub fn render(
+    config: &crate::config::Config,
+    logic: impl Fn(String) + 'static,
+) -> Result<(), Box<dyn std::error::Error>> {
     let app = AppWindow::new()?;
 
+    // Apply basic settings
+    app.set_font_size(config.font_size.0 as i32);
+
+    if let Some(font_family) = &config.font_family {
+        app.set_default_font(font_family.into());
+    }
+
+    let bg_color = slint::Color::from_argb_u8(
+        config.background_color.alpha,
+        config.background_color.red,
+        config.background_color.green,
+        config.background_color.blue,
+    );
+    let tx_color = slint::Color::from_argb_u8(
+        config.text_color.alpha,
+        config.text_color.red,
+        config.text_color.green,
+        config.text_color.blue,
+    );
+
+    app.set_bg_color(bg_color);
+    app.set_tx_color(tx_color);
+
     // Position the window
-    let monitor_dimensions = winit_helper::position_window(app.window(), &config.size, &config.location);
+    let monitor_dimensions =
+        winit_helper::position_window(app.window(), &config.size, &config.location);
 
     // Fixup the window dimensions
     match (&config.size, monitor_dimensions) {
         (WindowSize::Percent(x, y), Some(dims)) => {
             app.set_window_height((dims.height as f32 * y) as i32);
             app.set_window_width((dims.width as f32 * x) as i32);
-        },
+        }
         (WindowSize::Pixels(x, y), _) => {
             app.set_window_height(*y as i32);
             app.set_window_width(*x as i32);
-        },
+        }
         (WindowSize::Percent(_, _), None) => {
             println!("Couldn't get monitor dimensions, using default size")
-        },
+        }
     };
 
     // Ensure the window gains focus on startup
